@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BGMI App Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .phone-container {
+            width: 360px;
+            height: 700px;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        /* Welcome Screen */
+        #welcome-screen {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="360" height="700" viewBox="0 0 360 700"><rect width="360" height="700" fill="%23222"/><text x="180" y="350" font-family="Arial" font-size="20" fill="white" text-anchor="middle">BGMI Background</text></svg>');
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .start-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.4);
+        }
+        
+        /* Login Screen */
+        #login-screen {
+            background: #f9f9f9;
+            align-items: center;
+            padding-top: 50px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            color: white;
+            font-size: 40px;
+        }
+        
+        .input-container {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .input-label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .key-input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .login-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .error-message {
+            color: #f44336;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        /* Game Screen */
+        #game-screen {
+            background: #f9f9f9;
+            align-items: center;
+        }
+        
+        .game-image {
+            width: 200px;
+            height: 200px;
+            background: #ddd;
+            border-radius: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #FF5722, #FF9800);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .game-info {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .info-line {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-line:last-child {
+            border-bottom: none;
+        }
+        
+        .action-buttons {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .uninstall-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 48%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .install-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 48%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .play-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 48%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .status-bar {
+            height: 30px;
+            width: 100%;
+            background: #222;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 14px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .permission-notice {
+            background: #ffecb3;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶</span>
+        </div>
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <h1>BGMI App</h1>
+            <p>Ultimate Gaming Experience</p>
+            <button class="start-btn" onclick="showScreen('login-screen')">START</button>
+            
+            <div class="permission-notice">
+                This app requires storage permissions to function properly.
+            </div>
+        </div>
+        
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <div class="logo">LG</div>
+            <div class="input-container">
+                <div class="input-label">Enter your key</div>
+                <input type="text" class="key-input" placeholder="Access key" id="access-key">
+                <button class="login-btn" onclick="validateKey()">LOGIN</button>
+                <div class="error-message" id="error-message">📵 Key not valid</div>
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-image">BGMI Image</div>
+            
+            <div class="game-info">
+                <div class="info-line">• Version: 2.5.0</div>
+                <div class="info-line">• Size: 1.2 GB</div>
+                <div class="info-line">• Requirements: Android 5.1+</div>
+                <div class="info-line">• Latest update: New maps & weapons</div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="uninstall-btn" onclick="uninstallGame()">UNINSTALL</button>
+                <button class="install-btn" id="install-button" onclick="installGame()">INSTALL</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show the requested screen
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        function validateKey() {
+            const key = document.getElementById('access-key').value;
+            const errorElement = document.getElementById('error-message');
+            
+            // Simple validation - in a real app, this would call an API
+            if (key === '1234') { // Example valid key
+                showScreen('game-screen');
+            } else {
+                errorElement.style.display = 'block';
+                setTimeout(() => {
+                    errorElement.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        function installGame() {
+            const installButton = document.getElementById('install-button');
+            installButton.textContent = 'PLAY';
+            installButton.classList.remove('install-btn');
+            installButton.classList.add('play-btn');
+            installButton.onclick = playGame;
+            
+            alert('Game installed successfully! Click PLAY to start.');
+        }
+        
+        function playGame() {
+            alert('Launching BGMI game...');
+        }
+        
+        function uninstallGame() {
+            const installButton = document.getElementById('install-button');
+            installButton.textContent = 'INSTALL';
+            installButton.classList.remove('play-btn');
+            installButton.classList.add('install-btn');
+            installButton.onclick = installGame;
+            
+            alert('Game uninstalled successfully!');
+        }
+        
+        // Simulate Android permissions dialog
+        setTimeout(() => {
+            if (confirm("BGMI App requests access to storage, media files, and display over other apps. Allow?")) {
+                console.log("Permissions granted");
+            } else {
+                console.log("Permissions denied");
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
