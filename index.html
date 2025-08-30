@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BGMI Loader - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap">
+    <style>
+        /* Your existing CSS remains the same, I'm just adding the login-specific styles */
+        
+        /* Login Page Specific Styles */
+        .login-container {
+            max-width: 450px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(33, 33, 33, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 87, 34, 0.4);
+            border: 1px solid var(--primary);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: #bdbdbd;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            background: rgba(20, 20, 20, 0.7);
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 87, 34, 0.3);
+        }
+        
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+        
+        .remember-me input {
+            margin-right: 8px;
+        }
+        
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        .login-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #bdbdbd;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider span {
+            padding: 0 15px;
+            font-size: 0.9rem;
+        }
+        
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .google-btn {
+            background: #DB4437;
+        }
+        
+        .facebook-btn {
+            background: #4267B2;
+        }
+        
+        .discord-btn {
+            background: #5865F2;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #bdbdbd;
+        }
+        
+        .register-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive adjustments for login */
+        @media (max-width: 500px) {
+            .login-container {
+                margin: 30px 15px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">BGMI LOADER</div>
+        <button class="menu-btn" id="menuBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <!-- Side Navigation -->
+    <div class="side-nav" id="sideNav">
+        <div class="nav-close" id="navClose">
+            <i class="fas fa-times"></i>
+        </div>
+        <ul class="nav-list">
+            <li><a href="#" class="nav-link" data-page="home">Home</a></li>
+            <li><a href="#" class="nav-link" data-page="survive">Survive</a></li>
+            <li><a href="#" class="nav-link" data-page="about">About</a></li>
+            <li><a href="#" class="nav-link" data-page="feedback">Feedback</a></li>
+            <li><a href="#" class="nav-link" data-page="support">Support</a></li>
+            <li><a href="#" class="nav-link active" data-page="login">Login</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Login Page -->
+        <div class="page active" id="login">
+            <div class="login-container">
+                <div class="login-header">
+                    <h2>PLAYER LOGIN</h2>
+                    <p>Access your BGMI Loader account to manage your services</p>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="username">Username or Email</label>
+                        <input type="text" id="username" name="username" required placeholder="Enter your username">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    </div>
+                    
+                    <div class="login-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">LOGIN <i class="fas fa-sign-in-alt"></i></button>
+                </form>
+                
+                <div class="divider">
+                    <span>Or continue with</span>
+                </div>
+                
+                <div class="social-login">
+                    <div class="social-btn google-btn">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <div class="social-btn discord-btn">
+                        <i class="fab fa-discord"></i>
+                    </div>
+                </div>
+                
+                <div class="register-link">
+                    Don't have an account? <a href="#" id="registerLink">Register now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your other pages remain the same -->
+        <!-- Home Page -->
+        <div class="page" id="home">
+            <!-- ... existing home page content ... -->
+        </div>
+
+        <!-- Survive Page -->
+        <div class="page" id="survive">
+            <!-- ... existing survive page content ... -->
+        </div>
+
+        <!-- About Page -->
+        <div class="page" id="about">
+            <!-- ... existing about page content ... -->
+        </div>
+
+        <!-- Feedback Page -->
+        <div class="page" id="feedback">
+            <!-- ... existing feedback page content ... -->
+        </div>
+
+        <!-- Support Page -->
+        <div class="page" id="support">
+            <!-- ... existing support page content ... -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">BGMI LOADER 3.9</div>
+            <p>Premium BGMI Hacks and Services</p>
+            <p class="copyright">© 2025 BGMI Loader. All rights reserved. This service is not affiliated with PUBG Corporation or KRAFTON, Inc.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation functionality
+        const menuBtn = document.getElementById('menuBtn');
+        const sideNav = document.getElementById('sideNav');
+        const navClose = document.getElementById('navClose');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+        
+        menuBtn.addEventListener('click', () => {
+            sideNav.classList.add('active');
+        });
+        
+        navClose.addEventListener('click', () => {
+            sideNav.classList.remove('active');
+        });
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetPage = link.getAttribute('data-page');
+                
+                // Update active nav link
+                navLinks.forEach(navLink => navLink.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show target page
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                    if(page.id === targetPage) {
+                        page.classList.add('active');
+                    }
+                });
+                
+                // Close side nav
+                sideNav.classList.remove('active');
+            });
+        });
+        
+        // Login form functionality
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Simple validation
+                if (!username || !password) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // Simulate login process
+                alert('Login functionality would be implemented here!\n\nUsername: ' + username + '\nPassword: ' + password);
+                
+                // In a real application, you would send this data to a server
+                // and handle the authentication response
+            });
+        }
+        
+        // Register link functionality
+        const registerLink = document.getElementById('registerLink');
+        if (registerLink) {
+            registerLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Registration page would open here.');
+            });
+        }
+        
+        // Social login buttons
+        const socialButtons = document.querySelectorAll('.social-btn');
+        socialButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const platform = this.classList[1].split('-')[0];
+                alert('Login with ' + platform + ' would be implemented here.');
+            });
+        });
+    </script>
+</body>
+</html>
